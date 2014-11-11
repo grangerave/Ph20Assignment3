@@ -23,7 +23,7 @@ v_{i+1} &= v_i - h\frac{k}{m}x_i
 \end{align*}
 A python program was written to iteratively create a simulation of the simple harmonic motion, which can be seen in the code appendix. In this first simulation, for simplicity, mass $m$ and spring constant $k$ were chosen to be $m=k=1$, and the starting position was chosen to be $x_0 = 1$ with no initial velocity. Shown below is the plot of the simulated position and velocity of the mass over time, with $h=0.1$.
 \begin{center}
-\includegraphics[keepaspectratio=true]{Oscillations1.png}
+\includegraphics[keepaspectratio=true,width=360pt]{Oscillations1.png}
 \end{center}
 It is readily apparent that the oscillations are increasing in amplitude with time, which is clearly in disagreement with the true solution. The same increase in amplitude with respect to time is observed in the velocity oscillations, shown below.
 
@@ -64,24 +64,24 @@ As we noticed earlier in our numerical simulations, the oscillations in position
 \par
 To visualize the error in the numerical solution, we plot the difference between our numerical solution and the analytical solution found in part 2.2, shown below.
 \begin{center}
-\includegraphics[keepaspectratio=true]{Errors.png}
+\includegraphics[keepaspectratio=true,width=320pt]{Errors.png}
 \end{center}
 We observe that the truncation errors for both position and velocity appear to grow at an exponential rate with time.
 \section{Truncation Error Proportionality}
 In the previous section, we observed that the truncation errors in position and velocity were present in the numerical methods we implemented, and increased exponentially along extended periods of time. Since we know these errors are caused by non-zero values of $h$, we examine a correlation between $h$ and the error. \par 
 Shown below is the maximum position error $|x_i - x_{analytic} (t_i)|$ on the interval $0<t<20$ with respect to $h$.
 \begin{center}
-\includegraphics[keepaspectratio=true]{Error-H.png}
+\includegraphics[keepaspectratio=true,width=320pt]{Error-H.png}
 \end{center}
 From the graph we observe that the error does not follow an exponential relation, but decreases greatly with smaller values of $h$.
 \section{Normalized Total Energy}
 We compute the normalized total energy $E = x^2 + v^2$, and examine its numerical evolution as a function of time, as shown below on the interval $0<t<40$ with $h=0.1$
 \begin{center}
-\includegraphics[keepaspectratio=true,width=360pt]{Energy.png}
+\includegraphics[keepaspectratio=true,width=320pt]{Energy.png}
 \end{center}
 We quickly see that the energy increases exponentially with time. Comparing the increase in normalized total energy to the increase in global error in the numerical methods, we find that the normalized total energy increases at a far greater rate than either global error, as shown below.
 \begin{center}
-\includegraphics[keepaspectratio=true,width=360pt]{ErrorCombination.png}
+\includegraphics[keepaspectratio=true,width=320pt]{ErrorCombination.png}
 \end{center}
 \section{Implicit Euler Method}
 \subsection{Deriving explicit equations for the implicit method}
@@ -107,7 +107,7 @@ With $x_{i+1}$ and $v_{i+1}$ in terms of $x_{i}$ and $v_{i}$ as found above, we 
 \subsection{Error investigation of the implicit method}
 In this simulation, mass $m$ and spring constant $k$ were again chosen to be $m=k=1$, and the same starting conditions were used as the explicit method. Shown below is a comparison of position calculated by the implicit method and the position given analytically, with $h=0.1$.
 \begin{center}
-\includegraphics[keepaspectratio=true,width=360pt]{Implicit.png}
+\includegraphics[keepaspectratio=true,width=320pt]{Implicit.png}
 \end{center}
 Immediately apparent is that the implicit calculation decreases exponentially with time. Thus we can expect that the absolute error $|x_i - x_{analytic} (t_i)|$ will asymptote to $|cos(t_{i})|$ since the implicit calculation approaches $0$ for large $t$. We can also see this in a comparison of global errors for both explicit and implicit methods as shown below.
 \begin{center}
