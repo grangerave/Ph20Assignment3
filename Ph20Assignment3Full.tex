@@ -1,0 +1,171 @@
+\documentclass{scrartcl}
+\usepackage{graphicx,amsmath,amsfonts,amssymb,listings}
+\title{Ph20 Assignment 3}
+\author{Alexander Anferov}
+
+\begin{document}
+\maketitle
+\section{Explicit Euler Solution}
+We use transform the second order differential equation governing the harmonic motion of a mass on a spring
+\[
+\ddot{x} = -\frac{k}{m}x
+\]
+into two first order differential equations:
+
+\begin{align*}
+\dot{x} &= v \\ 
+\dot{v} &= -\frac{k}{m}v
+\end{align*}
+We then use Euler's method to approximate the latter with subdivisions, which iteratively yield a numerical solution.
+\begin{align*}
+x_{i+1} &= x_i + hv_i \\ 
+v_{i+1} &= v_i - h\frac{k}{m}x_i
+\end{align*}
+A python program was written to iteratively create a simulation of the simple harmonic motion, which can be seen in the code appendix. In this first simulation, for simplicity, mass $m$ and spring constant $k$ were chosen to be $m=k=1$, and the starting position was chosen to be $x_0 = 1$ with no initial velocity. Shown below is the plot of the simulated position and velocity of the mass over time, with $h=0.1$.
+\begin{center}
+\includegraphics[keepaspectratio=true]{Oscillations1.png}
+\end{center}
+It is readily apparent that the oscillations are increasing in amplitude with time, which is clearly in disagreement with the true solution. The same increase in amplitude with respect to time is observed in the velocity oscillations, shown below.
+
+\section{Analytical Solution and Errors of Numerical Methods}
+\subsection{Analytical Solution}
+To obtain the analytical solution to the motion of this simple harmonic oscillator, we begin with the equations of motion:
+\[
+\ddot{x} = -\frac{k}{m}x
+\]
+Noticing the relationship of the motion to its second derivative, we choose a general solution in the form:
+\[
+x = A \cos(\omega t - \phi)
+\]
+The second derivative is thus:
+\[
+\ddot{x} = -\omega^2 x
+\]
+Substituting for our equations of motion, we find that:
+\begin{align*}
+-\omega^2 x &= -\frac{k}{m}x \\
+\omega &= \sqrt{\frac{k}{m}}
+\end{align*}
+Thus our solution takes the form
+\[
+x = A \cos\left(t\sqrt{\frac{k}{m}} + \phi\right)
+\]
+Where $A$ and $\phi$ are determined by initial conditions. Since we know initial position and initial velocity, we can determine that
+\begin{align*}
+A &= x_0/\cos(-\phi) \\
+\phi &= \sin^{-1}\left( -\frac{v_0}{A}\sqrt{\frac{m}{k}} \right)
+\end{align*}
+In our case, since we choose $v_0 = 0 , x_0 =1$ and $m = k = 1$, the solution simplifies to:
+\[
+x = cos(t)
+\]
+\subsection{Errors in Numerical Solutions}
+As we noticed earlier in our numerical simulations, the oscillations in position and velocity appeared to increase with time, which is in disagreement with the analytical solution. Due to the fact that our numerical techniques are limited by the size of $h$, we attribute the disagreement to the global truncation error caused by the imperfect numerical techniques.
+\par
+To visualize the error in the numerical solution, we plot the difference between our numerical solution and the analytical solution found in part 2.2, shown below.
+\begin{center}
+\includegraphics[keepaspectratio=true]{Errors.png}
+\end{center}
+We observe that the truncation errors for both position and velocity appear to grow at an exponential rate with time.
+\section{Truncation Error Proportionality}
+In the previous section, we observed that the truncation errors in position and velocity were present in the numerical methods we implemented, and increased exponentially along extended periods of time. Since we know these errors are caused by non-zero values of $h$, we examine a correlation between $h$ and the error. \par 
+Shown below is the maximum position error $|x_i - x_{analytic} (t_i)|$ on the interval $0<t<20$ with respect to $h$.
+\begin{center}
+\includegraphics[keepaspectratio=true]{Error-H.png}
+\end{center}
+From the graph we observe that the error does not follow an exponential relation, but decreases greatly with smaller values of $h$.
+\section{Normalized Total Energy}
+We compute the normalized total energy $E = x^2 + v^2$, and examine its numerical evolution as a function of time, as shown below on the interval $0<t<40$ with $h=0.1$
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{Energy.png}
+\end{center}
+We quickly see that the energy increases exponentially with time. Comparing the increase in normalized total energy to the increase in global error in the numerical methods, we find that the normalized total energy increases at a far greater rate than either global error, as shown below.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{ErrorCombination.png}
+\end{center}
+\section{Implicit Euler Method}
+\subsection{Deriving explicit equations for the implicit method}
+
+We use Euler's implicit method to obtain the following differential equations from the equations of motion for our mass on a spring:
+\begin{align*}
+x_{i+1} &= x_i + hv_{i+1} \\ 
+v_{i+1} &= v_i - h\frac{k}{m}x_{i+1}
+\end{align*}
+To find $x_{i+1}$ in terms of $x_{i}$, we substitute for $v_{i}$:
+\begin{align*}
+x_{i+1} &= x_i + hv_{i+1} \\
+x_{i+1} &= x_i + hv_i - h^{2}\frac{k}{m}x_{i+1} \\
+x_{i+1} &= \frac{x_i + hv_i}{1+ h^{2}\frac{k}{m}}
+\end{align*}
+And to find $v_{i+1}$ in terms of $v_{i}$, we do the opposite:
+\begin{align*}
+v_{i+1} &= v_i - h\frac{k}{m}x_{i+1}\\
+v_{i+1} &= v_i - h\frac{k}{m}x_{i} - h^{2}\frac{k}{m}v_{i+1} \\
+v_{i+1} &= \frac{v_i - h\frac{k}{m}x_i}{1+ h^{2}\frac{k}{m}}
+\end{align*}
+With $x_{i+1}$ and $v_{i+1}$ in terms of $x_{i}$ and $v_{i}$ as found above, we write an iterative numerical program to simulate simple harmonic motion, which is shown in the code appendix.
+\subsection{Error investigation of the implicit method}
+In this simulation, mass $m$ and spring constant $k$ were again chosen to be $m=k=1$, and the same starting conditions were used as the explicit method. Shown below is a comparison of position calculated by the implicit method and the position given analytically, with $h=0.1$.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{Implicit.png}
+\end{center}
+Immediately apparent is that the implicit calculation decreases exponentially with time. Thus we can expect that the absolute error $|x_i - x_{analytic} (t_i)|$ will asymptote to $|cos(t_{i})|$ since the implicit calculation approaches $0$ for large $t$. We can also see this in a comparison of global errors for both explicit and implicit methods as shown below.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{ErrorIM.png}
+\end{center}
+Thus, on first glance, it appears that the implicit method always yields a much smaller error than the explicit method, but if we consider the fact that the implicit method causes the simulation to approach $0$ at large $t$, the smaller error does not signify more useful results. \par
+\section{Phase-Space Geometry of Explicit and Implicit trajectories}
+By plotting velocity against position for our numerical simulation of a simple harmonic oscillator, we can investigate the phase-space geometry of the explicit and implicit Euler methods. Shown below are plots for both methods.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{Spiral.png}
+\end{center}
+As we can deduce from the simple harmonic oscillator, the true analytical solution will yield a perfect circle, since both position and velocity maintain the same amplitude indefinitely as oscillations continue. However, as seen by the plot above, the Implicit method deviates from the true analytical solution by spiraling inwards, while the Explicit method deviates from the analytical solution by spiraling outwards.
+\section{Symplectic Method}
+\subsection{Derivation}
+
+Using the symplectic method, we obtain the following equations from the equations of motion of our simple harmonic oscillator.
+\begin{align*}
+x_{i+1} &= x_i + hv_{i} \\ 
+v_{i+1} &= v_i - h\frac{k}{m}x_{i+1}
+\end{align*}
+And to find $v_{i+1}$ in terms of $v_{i}$ and $x_i$, we do the opposite:
+\begin{align*}
+v_{i+1} &= v_i - h\frac{k}{m}x_{i+1}\\
+v_{i+1} &= v_i - h\frac{k}{m}x_{i} - h^{2}\frac{k}{m}v_{i} \\
+v_{i+1} &= -h\frac{k}{m}x_i + (1-h^2\frac{k}{m})v_i 
+\end{align*}
+With $x_{i+1}$ and $v_{i+1}$ in terms of $x_{i}$ and $v_{i}$ as found above, we write an iterative numerical program to simulate simple harmonic motion, which is shown in the code appendix.
+\subsection{Method Analysis}
+Shown below is a comparison of phase-space geometry for the implicit, explicit and symplectic Euler methods, compared for the same values of $h$
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{SpiralSymp.png}
+\end{center}
+As can be seen above, the symplectic method maintains the same amplitudes for both position and velocity, even after multiple periods, which is much closer to the true analytical solution. This can be confirmed below in a plot of position and velocity with respect to time: the amplitude of position and velocity stays fairly close to the initial values.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=360pt]{Symplectic.png}
+\end{center}
+\section{Normalized Total Energy of the Symplectic Method}
+We compute the normalized total energy $E = x^2 + v^2$, and examine its numerical evolution as a function of time, as shown below on the interval $0<t<40$ with $h=0.1$
+\begin{center}
+\includegraphics[keepaspectratio=true,width=300pt]{EnergySym.png}
+\end{center}
+As we can observe, the normalized total energy obtained with the symplectic Euler method follows a sinusoidal oscillation about its initial value. It should be noted that the deviations from the initial values never exceed a certain value, in this case $0.06 \%$ of the initial value. If we compare this to deviations from initial normalized energy found with implicit or explicit Euler methods, we find that these deviations are orders of magnitude smaller. Shown below are comparisons for energy evolution of symplectic, explicit and implicit methods. The deviations of the symplectic method are visibly smaller, and stay fairly constant with large values of $t$, as opposed to the other methods.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=300pt]{Energy3.png}
+\end{center}
+\section{Global Phase Error with the Symplectic Method}
+We recall that the symplectic solution yields a growing error in precise position, which manifests itself in phase offset. We investigate this by comparing the symplectic simulation to the analytical solution at small and large values of $t$. Shown below are both solutions on the interval $10<t<30$.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=300pt]{SmallTime.png}
+\end{center}
+A small phase offset between the simulation and the anlalytical solution is present. To investigate further, we select in larger values of $t$. Shown below are both solutions on the interval $4000<t<4020$.
+\begin{center}
+\includegraphics[keepaspectratio=true,width=300pt]{LargeTime.png}
+\end{center}
+We now see the growth of the phase error much clearer. Thus we can be certain that while the symplectic method will collect a fairly large inaccuracy in the exact position or velocity, while staying quite true to the position, velocity, and energy amplitudes.
+
+
+
+
+
+\end{document}
