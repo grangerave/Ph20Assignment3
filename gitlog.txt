@@ -1,5 +1,0 @@
-commit 2f794af354a025d60a5bb127adf50a2d661a0e5b
-Author: grangerave <grangerave@yahoo.com>
-Date:   Sun Nov 2 21:04:08 2014 -0800
-
-    Initial commit
